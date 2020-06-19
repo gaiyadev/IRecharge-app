@@ -53,7 +53,7 @@
                 <label class="form-check-label" for="exampleCheck1">Check me out</label>
               </div>
 
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button id="buy" type="submit" class="btn btn-primary">Submit</button>
             </form>
           </div>
         </div>
@@ -65,6 +65,7 @@
 
 <script>
 const axios = require("axios").default;
+axios.defaults.crossDomain = true;
 
 //axios.defaults.headers.common["Authorization"] = AUTH_TOKEN;
 //axios.defaults.headers.post["Content-Type"] = "Content-Type: application/json";
@@ -101,29 +102,23 @@ export default {
   methods: {
     onRecharge() {
       const url = "https://sandbox.wallets.africa/bills/airtime/purchase";
-      var optionAxios = {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST",
-          "Access-Control-Allow-Credentials": true,
-          Authorization: "Bearer" + this.publicKey,
-          "Access-Control-Allow-Headers": "Authorization"
-        }
-      };
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
       axios
         .post(
-          url,
+          proxyurl + url,
           {
+            //crossdomain: true,
             PhoneNumber: this.PhoneNumber,
             Code: this.Code,
             Amount: this.Amount,
             SecretKey: this.SecretKey
           },
           {
-            headers: optionAxios
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer uvjqzm5xl6bw"
+            }
           }
-          // { useCredentails: true }
         )
         .then(() => {
           console.log("odne");
@@ -132,4 +127,18 @@ export default {
     }
   }
 };
+
+// var optionAxios = {
+//   headers: {
+//     "Content-Type": "application/json",
+//     "Access-Control-Allow-Origin": "http://localhost:8080/",
+//     // "Access-Control-Allow-Headers":
+//     //   "Origin, X-Requested-With, Content-Type, Accept",
+//     "Access-Control-Allow-Methods": "POST",
+//     "Access-Control-Allow-Credentials": true,
+//     Authorization: "Bearer uvjqzm5xl6bw",
+//     credentials: "same-origin",
+//     "Access-Control-Allow-Headers": "Authorization"
+//   }
+// };
 </script>
