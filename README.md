@@ -1,5 +1,5 @@
 # irecharge
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4137a49b-14ff-4c99-957d-f7230fcfd844/deploy-status)](https://app.netlify.com/sites/irecharge/deploys)
 ## Project setup
 ```
 yarn install
