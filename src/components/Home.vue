@@ -100,15 +100,17 @@ export default {
 
   methods: {
     onRecharge() {
+      const url = "https://sandbox.wallets.africa/bills/airtime/purchase";
       var optionAxios = {
         headers: {
           "Content-Type": "application/json",
-          " Access-Control-Allow-Origin": "http://localhost:8080/"
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Credentials": true,
+          Authorization: "Bearer" + this.publicKey,
+          "Access-Control-Allow-Headers": "Authorization"
         }
       };
-
-      const url = "https://sandbox.wallets.africa/bills/airtime/purchase";
-
       axios
         .post(
           url,
@@ -118,23 +120,15 @@ export default {
             Amount: this.Amount,
             SecretKey: this.SecretKey
           },
-          optionAxios
+          {
+            headers: optionAxios
+          }
+          // { useCredentails: true }
         )
-        .then(function(response) {
-          console.log(response);
+        .then(() => {
+          console.log("odne");
         })
-        .catch(function(error) {
-          console.log(error);
-        });
-      // axios.post(
-      //   url,
-      //   {
-      //     PhoneNumber: this.PhoneNumber,
-      //     Code: this.Code,
-      //     Amount: this.Amount,
-      //     SecretKey: this.SecretKey
-      //   }
-      // );
+        .catch(err => console.log(err));
     }
   }
 };
