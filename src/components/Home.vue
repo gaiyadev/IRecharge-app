@@ -13,7 +13,7 @@
                 <input
                   type="text"
                   placeholder="07058399439"
-                  v-model="phoneNumber"
+                  v-model="PhoneNumber"
                   class="form-control"
                   name="phoneNumber"
                   id="phone"
@@ -66,12 +66,17 @@
 <script>
 const axios = require("axios").default;
 
+//axios.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+//axios.defaults.headers.post["Content-Type"] = "Content-Type: application/json";
 export default {
   data() {
     return {
-      phoneNumber: "",
+      PhoneNumber: "",
       Amount: "",
       Code: "",
+      SecretKey: "hfucj5jatq8h",
+      publicKey: "uvjqzm5xl6bw",
+
       items: [
         {
           name: "Mtn",
@@ -92,14 +97,44 @@ export default {
       ]
     };
   },
+
   methods: {
     onRecharge() {
-      axios.post("https://sandbox.wallets.africa/bills/airtime/purchase", {
-        phoneNumber: phoneNumber,
-        Amount: Amount,
-        Code: Code
-      });
-      // console.log(this.provider, this.code, this.phone_number);
+      var optionAxios = {
+        headers: {
+          "Content-Type": "application/json",
+          " Access-Control-Allow-Origin": "http://localhost:8080/"
+        }
+      };
+
+      const url = "https://sandbox.wallets.africa/bills/airtime/purchase";
+
+      axios
+        .post(
+          url,
+          {
+            PhoneNumber: this.PhoneNumber,
+            Code: this.Code,
+            Amount: this.Amount,
+            SecretKey: this.SecretKey
+          },
+          optionAxios
+        )
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      // axios.post(
+      //   url,
+      //   {
+      //     PhoneNumber: this.PhoneNumber,
+      //     Code: this.Code,
+      //     Amount: this.Amount,
+      //     SecretKey: this.SecretKey
+      //   }
+      // );
     }
   }
 };
