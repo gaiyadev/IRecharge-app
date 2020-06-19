@@ -5,7 +5,35 @@
       <div class="col-md-8">
         <div class="card shadow p-3 mb-5 bg-white rounded" style="margin-top:40px; ">
           <div class="card-body">
-            <h5 class="card-title">irecharge</h5>
+            <h5 class="card-title text-uppercase text-center text-primary">iRecharge</h5>
+            <div v-show="show" class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>Yeah!</strong> Airtime purchased successfully
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div
+              v-show="error"
+              class="alert alert-danger alert-dismissible fade show"
+              style="margin-top: 20px;"
+              role="alert"
+            >
+              <strong>Sorry!</strong> Please fill all fields
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
 
             <form @submit.prevent="onRecharge">
               <div class="form-group">
@@ -72,11 +100,12 @@ axios.defaults.crossDomain = true;
 export default {
   data() {
     return {
+      show: false,
+      error: false,
       PhoneNumber: "",
       Amount: "",
       Code: "",
       SecretKey: "hfucj5jatq8h",
-      publicKey: "uvjqzm5xl6bw",
 
       items: [
         {
@@ -101,29 +130,35 @@ export default {
 
   methods: {
     onRecharge() {
-      const url = "https://sandbox.wallets.africa/bills/airtime/purchase";
-      const proxyurl = "https://cors-anywhere.herokuapp.com/";
-      axios
-        .post(
-          proxyurl + url,
-          {
-            //crossdomain: true,
-            PhoneNumber: this.PhoneNumber,
-            Code: this.Code,
-            Amount: this.Amount,
-            SecretKey: this.SecretKey
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer uvjqzm5xl6bw"
+      if (this.PhoneNumber === "" || this.Code === "" || this.Amount === "") {
+        return (this.error = true);
+      } else {
+        const url = "https://sandbox.wallets.africa/bills/airtime/purchase";
+        const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        const publicKey = "uvjqzm5xl6bw";
+
+        axios
+          .post(
+            proxyurl + url,
+            {
+              PhoneNumber: this.PhoneNumber,
+              Code: this.Code,
+              Amount: this.Amount,
+              SecretKey: this.SecretKey
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${publicKey}`
+              }
             }
-          }
-        )
-        .then(() => {
-          console.log("odne");
-        })
-        .catch(err => console.log(err));
+          )
+          .then(() => {
+            this.show = true;
+            console.log("Airtime purchased successfully");
+          })
+          .catch(err => console.log(err));
+      }
     }
   }
 };
@@ -142,3 +177,6 @@ export default {
 //   }
 // };
 </script>
+
+<style scoped>
+</style>
